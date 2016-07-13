@@ -1,0 +1,4 @@
+packages/
+Parser/obj/
+Parser/bin/
+.vs/
