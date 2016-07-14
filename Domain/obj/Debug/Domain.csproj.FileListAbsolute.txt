@@ -8,3 +8,5 @@ D:\Projects\Pet\HomeFinder\Domain\bin\Debug\EntityFramework.SqlServer.xml
 D:\Projects\Pet\HomeFinder\Domain\obj\Debug\Domain.csprojResolveAssemblyReference.cache
 D:\Projects\Pet\HomeFinder\Domain\obj\Debug\Domain.dll
 D:\Projects\Pet\HomeFinder\Domain\obj\Debug\Domain.pdb
+D:\Projects\Pet\HomeFinder\Domain\obj\Debug\Domain.Migrations.InitialiseMigration.resources
+D:\Projects\Pet\HomeFinder\Domain\obj\Debug\Domain.csproj.GenerateResource.Cache

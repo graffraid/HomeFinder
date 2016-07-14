@@ -9,19 +9,19 @@
 
         public string Url { get; set; }
 
-        public int No { get; set; }
+        public int? No { get; set; }
 
-        public DateTime PlacementDate { get; set; }
+        public DateTime? PlacementDate { get; set; }
 
-        public int Price { get; set; }
+        public int? Price { get; set; }
 
-        public int RoomCount { get; set; }
+        public int? RoomCount { get; set; }
 
-        public int Space { get; set; }
+        public int? Space { get; set; }
 
-        public int Floor { get; set; }
+        public int? Floor { get; set; }
 
-        public int TotalFloor { get; set; }
+        public int? TotalFloor { get; set; }
 
         public string Description { get; set; }
 

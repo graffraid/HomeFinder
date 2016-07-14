@@ -8,6 +8,8 @@
 
         public string Street { get; set; }
 
+        public string ShortStreet { get; set; }
+
         public string No { get; set; }
 
         public virtual List<Advert> Adverts { get; set; }

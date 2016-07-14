@@ -17,5 +17,20 @@ namespace Domain
         public DbSet<AdvertImage> AdvertImages { get; set; }
 
         public DbSet<Building> Buildings { get; set; }
+
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
+        {
+            modelBuilder.Entity<AdvertImage>()
+                .HasRequired(img => img.Advert)
+                .WithMany(adv => adv.AdvertImages)
+                .HasForeignKey(img => img.AdvertId)
+                .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Advert>()
+                .HasRequired(adv => adv.Building)
+                .WithMany(bld => bld.Adverts)
+                .HasForeignKey(adv => adv.BuildingId)
+                .WillCascadeOnDelete(false);
+        }
     }
 }

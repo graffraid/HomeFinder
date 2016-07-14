@@ -1,6 +1,5 @@
 namespace Domain.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
     
     public partial class InitialiseMigration : DbMigration
@@ -17,7 +16,7 @@ namespace Domain.Migrations
                         AdvertId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Adverts", t => t.AdvertId, cascadeDelete: true)
+                .ForeignKey("dbo.Adverts", t => t.AdvertId)
                 .Index(t => t.AdvertId);
             
             CreateTable(
@@ -26,20 +25,20 @@ namespace Domain.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         Url = c.String(),
-                        No = c.Int(nullable: false),
-                        PlacementDate = c.DateTime(nullable: false),
-                        Price = c.Int(nullable: false),
-                        RoomCount = c.Int(nullable: false),
-                        Space = c.Int(nullable: false),
-                        Floor = c.Int(nullable: false),
-                        TotalFloor = c.Int(nullable: false),
+                        No = c.Int(),
+                        PlacementDate = c.DateTime(),
+                        Price = c.Int(),
+                        RoomCount = c.Int(),
+                        Space = c.Int(),
+                        Floor = c.Int(),
+                        TotalFloor = c.Int(),
                         Description = c.String(),
                         SellerName = c.String(),
                         SellerPhone = c.String(),
                         BuildingId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Buildings", t => t.BuildingId, cascadeDelete: true)
+                .ForeignKey("dbo.Buildings", t => t.BuildingId)
                 .Index(t => t.BuildingId);
             
             CreateTable(
@@ -48,6 +47,7 @@ namespace Domain.Migrations
                     {
                         Id = c.Int(nullable: false, identity: true),
                         Street = c.String(),
+                        ShortStreet = c.String(),
                         No = c.String(),
                     })
                 .PrimaryKey(t => t.Id);
@@ -56,8 +56,8 @@ namespace Domain.Migrations
         
         public override void Down()
         {
-            DropForeignKey("dbo.Adverts", "BuildingId", "dbo.Buildings");
             DropForeignKey("dbo.AdvertImages", "AdvertId", "dbo.Adverts");
+            DropForeignKey("dbo.Adverts", "BuildingId", "dbo.Buildings");
             DropIndex("dbo.Adverts", new[] { "BuildingId" });
             DropIndex("dbo.AdvertImages", new[] { "AdvertId" });
             DropTable("dbo.Buildings");
