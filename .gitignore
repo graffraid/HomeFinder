@@ -4,3 +4,4 @@ Parser/bin/
 .vs/
 *.user
 Domain/obj/
+Domain/bin/
