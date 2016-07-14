@@ -13,7 +13,7 @@
             context = new FinderDbContext();
         }
 
-        public IList<Advert> GetAll()
+        public List<Advert> GetAll()
         {
             return context.Adverts.ToList();
         }
