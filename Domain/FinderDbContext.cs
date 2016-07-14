@@ -1,0 +1,21 @@
+namespace Domain
+{
+    using System.Data.Entity;
+    using Entities;
+
+    public class FinderDbContext : DbContext
+    {
+        public FinderDbContext()
+            : base("name=HomeFinderConnection")
+        {
+            Configuration.ProxyCreationEnabled = false;
+            Configuration.LazyLoadingEnabled = false;
+        }
+
+        public DbSet<Advert> Adverts { get; set; }
+
+        public DbSet<AdvertImage> AdvertImages { get; set; }
+
+        public DbSet<Building> Buildings { get; set; }
+    }
+}
