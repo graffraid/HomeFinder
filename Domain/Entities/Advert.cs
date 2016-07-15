@@ -17,7 +17,7 @@
 
         public int? RoomCount { get; set; }
 
-        public int? Space { get; set; }
+        public double? Space { get; set; }
 
         public int? Floor { get; set; }
 
@@ -28,6 +28,8 @@
         public string SellerName { get; set; }
 
         public string SellerPhone { get; set; }
+
+        public bool IsSellerAgency { get; set; }
 
         public int BuildingId { get; set; }
 

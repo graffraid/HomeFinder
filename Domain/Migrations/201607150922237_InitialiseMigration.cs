@@ -1,5 +1,6 @@
 namespace Domain.Migrations
 {
+    using System;
     using System.Data.Entity.Migrations;
     
     public partial class InitialiseMigration : DbMigration
@@ -29,12 +30,13 @@ namespace Domain.Migrations
                         PlacementDate = c.DateTime(),
                         Price = c.Int(),
                         RoomCount = c.Int(),
-                        Space = c.Int(),
+                        Space = c.Double(),
                         Floor = c.Int(),
                         TotalFloor = c.Int(),
                         Description = c.String(),
                         SellerName = c.String(),
                         SellerPhone = c.String(),
+                        IsSellerAgency = c.Boolean(nullable: false),
                         BuildingId = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
