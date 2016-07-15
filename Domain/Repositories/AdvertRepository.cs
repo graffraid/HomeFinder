@@ -15,7 +15,7 @@
 
         public List<Advert> GetAll()
         {
-            return context.Adverts.ToList();
+            return context.Adverts.Include("AdvertImages").Include("Building").ToList();
         }
 
         public void Add(Advert advert)
@@ -28,6 +28,24 @@
         {
             context.Adverts.AddRange(adverts);
             context.SaveChanges();
+        }
+
+        public void AddOrUpdateRange(IList<Advert> adverts)
+        {
+            var dBadverts = GetAll();
+            List<Advert> newAdverts = adverts.Where(advert => dBadverts.All(x => x.No != advert.No)).ToList();
+            AddRange(newAdverts);
+
+            //List<Advert> oldAdverts = adverts.Except(newAdverts).ToList();
+            //foreach (var oldAdvert in oldAdverts)
+            //{
+            //    var dBadvert = dBadverts.First(x => x.No == oldAdvert.No);
+            //    if (dBadvert.Price != oldAdvert.Price || dBadvert.Description != oldAdvert.Description)
+            //    {
+            //        dBadvert = oldAdvert;
+            //    }
+            //}
+            //context.SaveChanges();
         }
     }
 }

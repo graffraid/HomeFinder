@@ -27,12 +27,10 @@
                 List<AdvertElement> advertElements = GetAdvertElements(driver, buildingList);
                 Console.WriteLine("\r====== Getting adverts finished. Count:{0} ======", advertElements.Count);
 
-                foreach (var advertElement in advertElements)
-                {
-                    Advert advert = GetAdvert(advertElement, driver);
-                    advertRepository.Add(advert);
-                }
+                List<Advert> adverts = advertElements.Select(advertElement => GetAdvert(advertElement, driver)).ToList();
+                advertRepository.AddOrUpdateRange(adverts);
 
+                Console.WriteLine("Done!");
                 Console.ReadKey(true);
             }
         }
@@ -141,7 +139,7 @@
             
             var data = driver.FindElements(By.ClassName("item-params"))[1].Text.Replace("-к квартира ", " ").Replace(" м² на ", " ").Replace(" этаже ", " ").Replace("-этажного ", " ").Replace("кирпичного дома", "").Split(' ');
 
-            return new Advert
+            var advert = new Advert
                        {
                            Url = advertElement.AdvertUrl,
                            BuildingId = advertElement.BuildingId,
@@ -157,6 +155,22 @@
                            SellerPhone = driver.FindElement(By.ClassName("description__phone-img")).GetAttribute("src"),
                            IsSellerAgency = driver.FindElement(By.ClassName("description_seller")).Text.Trim() == "Агентство"
             };
+
+            List<AdvertImage> images;
+            try
+            {
+                images = driver.FindElement(By.ClassName("gallery-list")).FindElements(By.ClassName("gallery-item")).Select(x => new AdvertImage
+                {
+                    Url = x.FindElement(By.ClassName("gallery-link")).GetAttribute("href")
+                }).ToList();
+            }
+            catch (Exception ex)
+            {
+                images = new List<AdvertImage>();
+            }
+            
+            advert.AdvertImages = images;
+            return advert;
         }
     }
 
@@ -167,5 +181,5 @@
         public IWebElement WebElement { get; set; }
 
         public string AdvertUrl { get; set; }
-}
+    }
 }
