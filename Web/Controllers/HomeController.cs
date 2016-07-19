@@ -6,7 +6,7 @@ namespace Web.Controllers
 
     public class HomeController : Controller
     {
-        private AdvertRepository advertRepository;
+        private readonly AdvertRepository advertRepository;
 
         public HomeController()
         {
