@@ -7,6 +7,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Parser", "Parser\Parser.csp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{07582F4D-0D3E-4D7A-8005-F039F694F408}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Web", "Web\Web.csproj", "{A9EE38E0-9903-4B13-8923-A71F3429AAF7}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,10 @@ Global
 		{07582F4D-0D3E-4D7A-8005-F039F694F408}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{07582F4D-0D3E-4D7A-8005-F039F694F408}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{07582F4D-0D3E-4D7A-8005-F039F694F408}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A9EE38E0-9903-4B13-8923-A71F3429AAF7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A9EE38E0-9903-4B13-8923-A71F3429AAF7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A9EE38E0-9903-4B13-8923-A71F3429AAF7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A9EE38E0-9903-4B13-8923-A71F3429AAF7}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
