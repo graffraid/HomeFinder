@@ -2,10 +2,13 @@
 {
     using System.Collections.Generic;
     using System.Net;
+    using System.Threading.Tasks;
     using System.Web.Http;
     using Domain.Entities;
     using Domain.Repositories;
     using Infrastructure.Excrptions;
+
+    using Parser;
 
     [RoutePrefix("api/home")]
     public class HomeApiController : ApiController
@@ -42,6 +45,15 @@
         public IHttpActionResult DeleteBuilding(int id)
         {
             buildingRepository.DeleteById(id);
+            return Ok();
+        }
+
+        [Route("data/adverts")]
+        [HttpPatch]
+        public IHttpActionResult UpdateAdveets()
+        {
+            var parser = new Parser();
+            Task.Run(() => parser.Parse());
             return Ok();
         }
     }

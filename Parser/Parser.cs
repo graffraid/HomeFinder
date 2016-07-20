@@ -12,6 +12,8 @@
     public class Parser
     {
         public static string status = string.Empty;
+
+        private List<Building> buildingList;
         private string url = "https://www.avito.ru/voronezh/kvartiry/prodam/vtorichka/kirpichnyy_dom?district=150&f=549_5698-5699-5700";
         
         public void Parse()
@@ -19,24 +21,31 @@
             var buildingRepository = new BuildingRepository();
             var advertRepository = new AdvertRepository();
 
-            List<Building> buildingList = buildingRepository.GetAll();
+            buildingList = buildingRepository.GetAll();
+            List<Advert> adverts = new List<Advert>();
 
             using (IWebDriver driver = new PhantomJSDriver())
             //using (IWebDriver driver = new FirefoxDriver())
             {
                 driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
-                List<AdvertElement> advertElements = GetAdvertElements(driver, buildingList);
-                Console.WriteLine("\r====== Getting adverts finished. Count:{0} ======", advertElements.Count);
-
-                List<Advert> adverts = advertElements.Select(advertElement => GetAdvert(advertElement, driver)).ToList();
-                advertRepository.AddOrUpdateRange(adverts);
-
-                Console.WriteLine("Done!");
-                Console.ReadKey(true);
+                List<AdvertElement> advertElements = GetAdvertElements(driver);
+                status = $"Getting adverts finished. Count:{advertElements.Count}";
+                
+                var index = 0;
+                foreach (var advertElement in advertElements)
+                {
+                    index++;
+                    status = $"Parsing adverts... {index}/{advertElements.Count}";
+                    var advert = GetAdvert(advertElement, driver);
+                    adverts.Add(advert);
+                }
             }
+            status = "Updatind database...";
+            advertRepository.AddOrUpdateRange(adverts);
+            status = "Done!";
         }
 
-        private List<AdvertElement> GetAdvertElements(IWebDriver driver, List<Building> buildingList)
+        private List<AdvertElement> GetAdvertElements(IWebDriver driver)
         {
             List<AdvertElement> result = new List<AdvertElement>();
             driver.Navigate().GoToUrl(url);
@@ -46,40 +55,13 @@
 
             foreach (var pageUrl in pageUrlList)
             {
-                Console.Write("\rGetting adverts... page {0}/{1}", pageUrl.Key, pageUrlList.Count);
+                status = $"Getting adverts... page {pageUrl.Key}/{pageUrlList.Count}";
 
-                IList<IWebElement> webElements = ParsePage(driver, pageUrl.Value);
-                List<AdvertElement> filteredAdvertElements = FilterAdvertElements(webElements, buildingList);
-                result.AddRange(filteredAdvertElements);
+                IList<IWebElement> advertWebElements = GetAdvertWebElements(driver, pageUrl.Value);
+                List<AdvertElement> advertElements = GetCorrectAdvertElements(advertWebElements);
+                result.AddRange(advertElements);
             }
             return result;
-        }
-
-        private IList<IWebElement> ParsePage(IWebDriver driver, string url)
-        {
-            if (driver.Url != url)
-            {
-                driver.Navigate().GoToUrl(url);
-            }
-            return driver.FindElements(By.ClassName("item"));
-        }
-
-        private List<AdvertElement> FilterAdvertElements(IList<IWebElement> advertElements, List<Building> buildingList)
-        {
-            List<AdvertElement> rezult = new List<AdvertElement>();
-
-            foreach (IWebElement element in advertElements)
-            {
-                var buildingId = IsAdvertElementSatisfy(element.FindElement(By.ClassName("description")).FindElement(By.ClassName("address")).Text, buildingList);
-                if (buildingId > 0)
-                {
-                    rezult.Add(new AdvertElement { BuildingId = buildingId,
-                                                   WebElement = element,
-                                                   AdvertUrl = element.FindElement(By.ClassName("description")).FindElement(By.ClassName("item-description-title")).FindElement(By.ClassName("item-description-title-link")).GetAttribute("href")
-                    });
-                }
-            }
-            return rezult;
         }
 
         private Dictionary<int, string> GetPageUrls(IList<IWebElement> pageElements)
@@ -95,42 +77,40 @@
             return rezult;
         }
 
-        private int IsAdvertElementSatisfy(string elementAddr, List<Building> buildingList)
+        private IList<IWebElement> GetAdvertWebElements(IWebDriver driver, string url)
         {
+            if (driver.Url != url)
+            {
+                driver.Navigate().GoToUrl(url);
+            }
+            return driver.FindElements(By.ClassName("item"));
+        }
 
+        private List<AdvertElement> GetCorrectAdvertElements(IList<IWebElement> advertElements)
+        {
+            List<AdvertElement> rezult = new List<AdvertElement>();
+
+            foreach (IWebElement element in advertElements)
+            {
+                var buildingId = GetBuildingId(element.FindElement(By.ClassName("description")).FindElement(By.ClassName("address")).Text);
+                if (buildingId != null)
+                {
+                    rezult.Add(new AdvertElement { BuildingId = (int)buildingId,
+                                                   WebElement = element,
+                                                   AdvertUrl = element.FindElement(By.ClassName("description")).FindElement(By.ClassName("item-description-title")).FindElement(By.ClassName("item-description-title-link")).GetAttribute("href")
+                    });
+                }
+            }
+            return rezult;
+        }
+
+        private int? GetBuildingId(string elementAddr)
+        {
             if (buildingList.Any(addr => elementAddr.Contains(addr.ShortStreet) && elementAddr.Contains(addr.No)))
             {
                 return buildingList.First(addr => elementAddr.Contains(addr.ShortStreet) && elementAddr.Contains(addr.No)).Id;
             }
-            return 0;
-        }
-
-        private DateTime ParseDate(string elementText)
-        {
-            DateTime result;
-            var date =
-                elementText.Replace(". Редактировать, закрыть, поднять объявление", "")
-                    .Replace("Размещено ", "")
-                    .Replace(" в ", "/")
-                    .Split('/');
-
-            switch (date[0])
-            {
-                case "вчера":
-                    result = DateTime.Now.AddDays(-1).Date;
-                    break;
-                case "сегодня":
-                    result = DateTime.Now.Date;
-                    break;
-                default:
-                    result = DateTime.Parse(date[0]);
-                    break;
-            }
-
-            var hours = int.Parse(date[1].Split(':')[0]);
-            var minutes = int.Parse(date[1].Split(':')[1]);
-
-            return result.AddHours(hours).AddMinutes(minutes);
+            return null;
         }
 
         private Advert GetAdvert(AdvertElement advertElement, IWebDriver driver)
@@ -172,6 +152,34 @@
             
             advert.AdvertImages = images;
             return advert;
+        }
+
+        private DateTime ParseDate(string elementText)
+        {
+            DateTime result;
+            var date =
+                elementText.Replace(". Редактировать, закрыть, поднять объявление", "")
+                    .Replace("Размещено ", "")
+                    .Replace(" в ", "/")
+                    .Split('/');
+
+            switch (date[0])
+            {
+                case "вчера":
+                    result = DateTime.Now.AddDays(-1).Date;
+                    break;
+                case "сегодня":
+                    result = DateTime.Now.Date;
+                    break;
+                default:
+                    result = DateTime.Parse(date[0]);
+                    break;
+            }
+
+            var hours = int.Parse(date[1].Split(':')[0]);
+            var minutes = int.Parse(date[1].Split(':')[1]);
+
+            return result.AddHours(hours).AddMinutes(minutes);
         }
     }
 }
