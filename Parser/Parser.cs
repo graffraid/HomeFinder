@@ -9,11 +9,12 @@
     using OpenQA.Selenium.Firefox;
     using OpenQA.Selenium.PhantomJS;
 
-    class Program
+    public class Parser
     {
-        private static string url = "https://www.avito.ru/voronezh/kvartiry/prodam/vtorichka/kirpichnyy_dom?district=150&f=549_5698-5699-5700";
+        public static string status = string.Empty;
+        private string url = "https://www.avito.ru/voronezh/kvartiry/prodam/vtorichka/kirpichnyy_dom?district=150&f=549_5698-5699-5700";
         
-        static void Main()
+        public void Parse()
         {
             var buildingRepository = new BuildingRepository();
             var advertRepository = new AdvertRepository();
@@ -35,7 +36,7 @@
             }
         }
 
-        private static List<AdvertElement> GetAdvertElements(IWebDriver driver, List<Building> buildingList)
+        private List<AdvertElement> GetAdvertElements(IWebDriver driver, List<Building> buildingList)
         {
             List<AdvertElement> result = new List<AdvertElement>();
             driver.Navigate().GoToUrl(url);
@@ -54,7 +55,7 @@
             return result;
         }
 
-        private static IList<IWebElement> ParsePage(IWebDriver driver, string url)
+        private IList<IWebElement> ParsePage(IWebDriver driver, string url)
         {
             if (driver.Url != url)
             {
@@ -63,7 +64,7 @@
             return driver.FindElements(By.ClassName("item"));
         }
 
-        private static List<AdvertElement> FilterAdvertElements(IList<IWebElement> advertElements, List<Building> buildingList)
+        private List<AdvertElement> FilterAdvertElements(IList<IWebElement> advertElements, List<Building> buildingList)
         {
             List<AdvertElement> rezult = new List<AdvertElement>();
 
@@ -81,7 +82,7 @@
             return rezult;
         }
 
-        private static Dictionary<int, string> GetPageUrls(IList<IWebElement> pageElements)
+        private Dictionary<int, string> GetPageUrls(IList<IWebElement> pageElements)
         {
             Dictionary<int, string> rezult = new Dictionary<int, string> { { 1, url } };
             foreach (IWebElement element in pageElements)
@@ -94,7 +95,7 @@
             return rezult;
         }
 
-        private static int IsAdvertElementSatisfy(string elementAddr, List<Building> buildingList)
+        private int IsAdvertElementSatisfy(string elementAddr, List<Building> buildingList)
         {
 
             if (buildingList.Any(addr => elementAddr.Contains(addr.ShortStreet) && elementAddr.Contains(addr.No)))
@@ -104,7 +105,7 @@
             return 0;
         }
 
-        private static DateTime ParseDate(string elementText)
+        private DateTime ParseDate(string elementText)
         {
             DateTime result;
             var date =
@@ -132,7 +133,7 @@
             return result.AddHours(hours).AddMinutes(minutes);
         }
 
-        public static Advert GetAdvert(AdvertElement advertElement, IWebDriver driver)
+        private Advert GetAdvert(AdvertElement advertElement, IWebDriver driver)
         {
             driver.Navigate().GoToUrl(advertElement.AdvertUrl);
             driver.FindElement(By.ClassName("js-phone-show__link")).Click();
@@ -172,14 +173,5 @@
             advert.AdvertImages = images;
             return advert;
         }
-    }
-
-    public class AdvertElement
-    {
-        public int BuildingId { get; set; }
-
-        public IWebElement WebElement { get; set; }
-
-        public string AdvertUrl { get; set; }
     }
 }
