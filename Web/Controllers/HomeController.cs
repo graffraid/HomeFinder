@@ -15,21 +15,26 @@ namespace Web.Controllers
 
         public ActionResult Index()
         {
+            return View();
+        }
+
+        public ActionResult Adverts()
+        {
             var adverts = advertRepository.GetAll();
 
             return View(adverts);
         }
 
-        public ActionResult About()
+        public ActionResult Buildings()
         {
-            ViewBag.Message = "Your application description page.";
+            ViewBag.Message = "Your application Buildings page.";
 
             return View();
         }
 
-        public ActionResult Contact()
+        public ActionResult Data()
         {
-            ViewBag.Message = "Your contact page.";
+            ViewBag.Message = "Your Data page.";
 
             return View();
         }
