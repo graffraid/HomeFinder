@@ -206,6 +206,10 @@
       <Project>{fbe1e2c4-2a3c-432b-9dcd-c9897c3a9a54}</Project>
       <Name>Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Parser\Parser.csproj">
+      <Project>{de53cdb9-df63-4c7c-97a9-2ca7041b0766}</Project>
+      <Name>Parser</Name>
+    </ProjectReference>
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

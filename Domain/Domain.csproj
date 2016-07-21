@@ -55,9 +55,9 @@
     <Compile Include="Entities\AdvertImage.cs" />
     <Compile Include="Entities\Building.cs" />
     <Compile Include="FinderDbContext.cs" />
-    <Compile Include="Migrations\201607150922237_InitialiseMigration.cs" />
-    <Compile Include="Migrations\201607150922237_InitialiseMigration.Designer.cs">
-      <DependentUpon>201607150922237_InitialiseMigration.cs</DependentUpon>
+    <Compile Include="Migrations\201607211303158_InitialiseMigration.cs" />
+    <Compile Include="Migrations\201607211303158_InitialiseMigration.Designer.cs">
+      <DependentUpon>201607211303158_InitialiseMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -69,15 +69,15 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201607150922237_InitialiseMigration.resx">
-      <DependentUpon>201607150922237_InitialiseMigration.cs</DependentUpon>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Infrastructure\Infrastructure.csproj">
       <Project>{FBE1E2C4-2A3C-432B-9DCD-C9897C3A9A54}</Project>
       <Name>Infrastructure</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Migrations\201607211303158_InitialiseMigration.resx">
+      <DependentUpon>201607211303158_InitialiseMigration.cs</DependentUpon>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

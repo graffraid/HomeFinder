@@ -38,6 +38,8 @@ namespace Domain.Migrations
                         SellerPhone = c.String(),
                         IsSellerAgency = c.Boolean(nullable: false),
                         BuildingId = c.Int(nullable: false),
+                        AddDate = c.DateTime(nullable: false),
+                        UpdateDate = c.DateTime(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Buildings", t => t.BuildingId)
