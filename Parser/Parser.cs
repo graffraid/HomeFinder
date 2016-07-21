@@ -44,7 +44,8 @@
                     }
                 }
                 Status = "Updatind database...";
-                advertRepository.AddOrUpdateRange(adverts);
+                //advertRepository.AddOrUpdateRange(adverts);
+                advertRepository.AddRange(adverts);
                 Status = "Done!";
             }
         }

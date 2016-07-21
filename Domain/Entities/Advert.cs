@@ -36,5 +36,9 @@
         public virtual Building Building { get; set; }
 
         public virtual List<AdvertImage> AdvertImages { get; set; }
+
+        public DateTime AddDate { get; set; }
+
+        public DateTime? UpdateDate { get; set; }
     }
 }
