@@ -11,38 +11,42 @@
 
     public class Parser
     {
-        public static string status = string.Empty;
+        public static string Status { get; private set; } = string.Empty;
 
         private List<Building> buildingList;
         private string url = "https://www.avito.ru/voronezh/kvartiry/prodam/vtorichka/kirpichnyy_dom?district=150&f=549_5698-5699-5700";
         
         public void Parse()
         {
-            var buildingRepository = new BuildingRepository();
-            var advertRepository = new AdvertRepository();
-
-            buildingList = buildingRepository.GetAll();
-            List<Advert> adverts = new List<Advert>();
-
-            using (IWebDriver driver = new PhantomJSDriver())
-            //using (IWebDriver driver = new FirefoxDriver())
+            if (Status == string.Empty || Status == "Done!")
             {
-                driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
-                List<AdvertElement> advertElements = GetAdvertElements(driver);
-                status = $"Getting adverts finished. Count:{advertElements.Count}";
-                
-                var index = 0;
-                foreach (var advertElement in advertElements)
+                Status = "Start parsing...";
+                var buildingRepository = new BuildingRepository();
+                var advertRepository = new AdvertRepository();
+
+                buildingList = buildingRepository.GetAll();
+                List<Advert> adverts = new List<Advert>();
+
+                using (IWebDriver driver = new PhantomJSDriver())
+                //using (IWebDriver driver = new FirefoxDriver())
                 {
-                    index++;
-                    status = $"Parsing adverts... {index}/{advertElements.Count}";
-                    var advert = GetAdvert(advertElement, driver);
-                    adverts.Add(advert);
+                    driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
+                    List<AdvertElement> advertElements = GetAdvertElements(driver);
+                    Status = $"Getting adverts finished. Count:{advertElements.Count}";
+
+                    var index = 0;
+                    foreach (var advertElement in advertElements)
+                    {
+                        index++;
+                        Status = $"Parsing adverts... {index}/{advertElements.Count}";
+                        var advert = GetAdvert(advertElement, driver);
+                        adverts.Add(advert);
+                    }
                 }
+                Status = "Updatind database...";
+                advertRepository.AddOrUpdateRange(adverts);
+                Status = "Done!";
             }
-            status = "Updatind database...";
-            advertRepository.AddOrUpdateRange(adverts);
-            status = "Done!";
         }
 
         private List<AdvertElement> GetAdvertElements(IWebDriver driver)
@@ -55,7 +59,7 @@
 
             foreach (var pageUrl in pageUrlList)
             {
-                status = $"Getting adverts... page {pageUrl.Key}/{pageUrlList.Count}";
+                Status = $"Getting adverts... page {pageUrl.Key}/{pageUrlList.Count}";
 
                 IList<IWebElement> advertWebElements = GetAdvertWebElements(driver, pageUrl.Value);
                 List<AdvertElement> advertElements = GetCorrectAdvertElements(advertWebElements);
