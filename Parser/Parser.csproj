@@ -70,6 +70,7 @@
   <ItemGroup>
     <Compile Include="AdvertElement.cs" />
     <Compile Include="Parser.cs" />
+    <Compile Include="ParserFilter.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

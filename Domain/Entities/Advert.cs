@@ -31,14 +31,16 @@
 
         public bool IsSellerAgency { get; set; }
 
+        public DateTime AddDate { get; set; }
+
         public int BuildingId { get; set; }
 
         public virtual Building Building { get; set; }
 
         public virtual List<AdvertImage> AdvertImages { get; set; }
 
-        public DateTime AddDate { get; set; }
+        public virtual Advert InitialAdvert { get; set; }
 
-        public DateTime? UpdateDate { get; set; }
+        public virtual Advert ChangedAdvert { get; set; }
     }
 }

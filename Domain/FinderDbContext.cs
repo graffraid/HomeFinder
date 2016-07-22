@@ -31,6 +31,11 @@ namespace Domain
                 .WithMany(bld => bld.Adverts)
                 .HasForeignKey(adv => adv.BuildingId)
                 .WillCascadeOnDelete(false);
+
+            modelBuilder.Entity<Advert>()
+                .HasOptional(adv => adv.ChangedAdvert)
+                .WithRequired(adv => adv.InitialAdvert)
+                .WillCascadeOnDelete(false);
         }
     }
 }

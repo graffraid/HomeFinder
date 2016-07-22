@@ -56,10 +56,16 @@
                         adverts.Add(advert);
                     }
                 }
+
+                var filter = new ParserFilter(advertRepository);
+                var newAdverts = filter.GetNewAdverts(adverts);
+                var changedAdverts = filter.GetChangedAdverts(adverts);
+                
                 Status = "Updatind database...";
                 hubProxy.Invoke("PushStatus", Status);
-                //advertRepository.AddOrUpdateRange(adverts);
-                advertRepository.AddRange(adverts);
+                advertRepository.AddRange(newAdverts);
+                advertRepository.AddRange(changedAdverts);
+
                 Status = "Done!";
                 hubProxy.Invoke("PushStatus", Status);
             }

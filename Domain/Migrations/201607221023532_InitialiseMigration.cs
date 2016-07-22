@@ -37,13 +37,15 @@ namespace Domain.Migrations
                         SellerName = c.String(),
                         SellerPhone = c.String(),
                         IsSellerAgency = c.Boolean(nullable: false),
-                        BuildingId = c.Int(nullable: false),
                         AddDate = c.DateTime(nullable: false),
-                        UpdateDate = c.DateTime(),
+                        BuildingId = c.Int(nullable: false),
+                        InitialAdvert_Id = c.Int(nullable: false),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Buildings", t => t.BuildingId)
-                .Index(t => t.BuildingId);
+                .ForeignKey("dbo.Adverts", t => t.InitialAdvert_Id)
+                .Index(t => t.BuildingId)
+                .Index(t => t.InitialAdvert_Id);
             
             CreateTable(
                 "dbo.Buildings",
@@ -61,7 +63,9 @@ namespace Domain.Migrations
         public override void Down()
         {
             DropForeignKey("dbo.AdvertImages", "AdvertId", "dbo.Adverts");
+            DropForeignKey("dbo.Adverts", "InitialAdvert_Id", "dbo.Adverts");
             DropForeignKey("dbo.Adverts", "BuildingId", "dbo.Buildings");
+            DropIndex("dbo.Adverts", new[] { "InitialAdvert_Id" });
             DropIndex("dbo.Adverts", new[] { "BuildingId" });
             DropIndex("dbo.AdvertImages", new[] { "AdvertId" });
             DropTable("dbo.Buildings");
