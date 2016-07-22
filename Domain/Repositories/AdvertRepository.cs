@@ -15,6 +15,16 @@
             context = new FinderDbContext();
         }
 
+        public Advert Get(int id)
+        {
+            return context.Adverts.Include("AdvertImages")
+                                  .Include("Building")
+                                  .Include("InitialAdvert")
+                                  .Include("ChangedAdvert")
+                                  .FirstOrDefault(adv => adv.Id == id);
+        }
+
+
         public List<Advert> GetAll()
         {
             return context.Adverts.Include("AdvertImages")

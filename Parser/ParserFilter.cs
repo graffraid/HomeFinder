@@ -45,7 +45,7 @@
                     || dbAdvert.SellerName != existingAdvert.SellerName
                     || dbAdvert.SellerPhone != existingAdvert.SellerPhone
                     || dbAdvert.IsSellerAgency != existingAdvert.IsSellerAgency
-                    || !dbAdvert.AdvertImages.Select(x => x.Url).ToList().Equals(existingAdvert.AdvertImages.Select(x => x.Url).ToList()))
+                    || !dbAdvert.AdvertImages.Select(x => x.Url).ToList().SequenceEqual(existingAdvert.AdvertImages.Select(x => x.Url).ToList()))
                 {
                     existingAdvert.InitialAdvert = dbAdvert;
                     existingAdvert.Type = AdvertType.Actual;

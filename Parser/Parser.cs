@@ -12,7 +12,7 @@
 
     public class Parser
     {
-        public string Status { get; private set; } = "Ready to start";
+        public static string Status { get; private set; } = "Ready to start";
         private List<Building> buildings;
         private List<Advert> dbAdverts;
         private readonly string url;
@@ -22,7 +22,7 @@
             this.url = url;
         }
 
-        public void Parse(string hubUrl)
+        public void Parse(string hubUrl, string picturesPath, string absolutePicturesPath)
         {
             var hubConnection = new HubConnection(hubUrl);
             var hubProxy = hubConnection.CreateHubProxy("foxyHub");
@@ -72,6 +72,10 @@
                     advertRepository.AddRange(changedAdverts);
                     advertRepository.EditRange(outdatedAdverts);
 
+
+                    var parserImageCacher = new ParserImageCacher();
+                    parserImageCacher.CacheImages(hubProxy, hubUrl, picturesPath, absolutePicturesPath);
+                    
                     Status = "Done!";
                     hubProxy.Invoke("PushStatus", Status);
                 }

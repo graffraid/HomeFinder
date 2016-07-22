@@ -1,8 +1,10 @@
 ﻿namespace Web.Controllers
 {
     using System.Collections.Generic;
+    using System.Configuration;
     using System.Net;
     using System.Threading.Tasks;
+    using System.Web.Hosting;
     using System.Web.Http;
     using Domain.Entities;
     using Domain.Repositories;
@@ -50,11 +52,15 @@
 
         [Route("data/adverts")]
         [HttpGet]
-        public IHttpActionResult UpdateAdveets()
+        public IHttpActionResult UpdateAdverts()
         {
             var urlToParse ="https://www.avito.ru/voronezh/kvartiry/prodam/vtorichka/kirpichnyy_dom?district=150&f=549_5698-5699-5700"; //ToDo: pass it as parameter.
+            var hubUrl = $"{Request.RequestUri.Scheme}://{Request.RequestUri.Host}";
+            var picturesPath = ConfigurationManager.AppSettings["images:path"];
+            var absolutePicturesPath = HostingEnvironment.MapPath($"~/{ConfigurationManager.AppSettings["images:path"]}");
+
             var avitoParser = new Parser(urlToParse);
-            Task.Run(() => avitoParser.Parse($"{Request.RequestUri.Scheme}://{Request.RequestUri.Host}"));
+            Task.Run(() => avitoParser.Parse(hubUrl, picturesPath, absolutePicturesPath));
             return Ok();
         }
     }
