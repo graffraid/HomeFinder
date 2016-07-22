@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using Infrastructure.Enums;
 
     public class Advert
     {
@@ -32,6 +33,8 @@
         public bool IsSellerAgency { get; set; }
 
         public DateTime AddDate { get; set; }
+
+        public AdvertType Type { get; set; }
 
         public int BuildingId { get; set; }
 

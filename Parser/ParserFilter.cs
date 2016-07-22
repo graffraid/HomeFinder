@@ -5,25 +5,32 @@
     using Domain.Entities;
     using Domain.Repositories;
 
+    using Infrastructure.Enums;
+
     public class ParserFilter
     {
-        private readonly AdvertRepository advertRepository;
+        private readonly List<Advert> dbAdverts;
 
-        public ParserFilter(AdvertRepository advertRepository)
+        public ParserFilter(List<Advert> dbAdverts)
         {
-            this.advertRepository = advertRepository;
+            this.dbAdverts = dbAdverts;
         }
 
-        public List<Advert> GetNewAdverts(List<Advert> advertElements)
-        {
-            var dbAdverts = advertRepository.GetAll();
-            return advertElements.Where(advertElement => dbAdverts.All(x => x.No != advertElement.No)).ToList();
-        }
-        public List<Advert> GetChangedAdverts(List<Advert> advertElements)
+        public List<Advert> GetNewAdverts(List<Advert> adverts)
         {
             var rezult = new List<Advert>();
-            var dbAdverts = advertRepository.GetAll();
-            var existingAdverts = advertElements.Where(advertElement => dbAdverts.Any(x => x.No == advertElement.No)).ToList();
+            rezult = adverts.Where(advert => dbAdverts.All(x => x.No != advert.No)).ToList();
+            foreach (var item in rezult)
+            {
+                item.Type = AdvertType.Actual;
+            }
+            return rezult;
+        }
+
+        public List<Advert> GetChangedAdverts(List<Advert> adverts)
+        {
+            var rezult = new List<Advert>();
+            var existingAdverts = adverts.Where(advert => dbAdverts.Any(x => x.No == advert.No)).ToList();
 
             foreach (var existingAdvert in existingAdverts)
             {
@@ -41,9 +48,23 @@
                     || !dbAdvert.AdvertImages.Select(x => x.Url).ToList().Equals(existingAdvert.AdvertImages.Select(x => x.Url).ToList()))
                 {
                     existingAdvert.InitialAdvert = dbAdvert;
+                    existingAdvert.Type = AdvertType.Actual;
+                    dbAdvert.Type = AdvertType.Changed;
                     rezult.Add(existingAdvert);
                 }
             }
+            return rezult;
+        }
+
+        public List<Advert> GetOutdatedAdverts(List<Advert> adverts)
+        {
+            var rezult = new List<Advert>();
+            rezult = dbAdverts.Where(dbAdvert => adverts.All(advert => advert.No != dbAdvert.No)).ToList();
+            foreach (var item in rezult)
+            {
+                item.Type = AdvertType.Outdated;
+            }
+
             return rezult;
         }
     }

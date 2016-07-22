@@ -13,7 +13,8 @@
     public class Parser
     {
         public string Status { get; private set; } = "Ready to start";
-        private List<Building> buildingList;
+        private List<Building> buildings;
+        private List<Advert> dbAdverts;
         private readonly string url;
 
         public Parser(string url)
@@ -35,10 +36,11 @@
                     hubProxy.Invoke("PushStatus", Status);
 
                     var buildingRepository = new BuildingRepository();
+                    buildings = buildingRepository.GetAll();
                     var advertRepository = new AdvertRepository();
+                    dbAdverts = advertRepository.GetAll();
 
-                    buildingList = buildingRepository.GetAll();
-                    List<Advert> adverts = new List<Advert>();
+                    List<Advert> parsedAdverts = new List<Advert>();
 
                     using (IWebDriver driver = new PhantomJSDriver())
                     //using (IWebDriver driver = new FirefoxDriver())
@@ -55,18 +57,20 @@
                             Status = $"Parsing adverts... {index}/{advertElements.Count}";
                             hubProxy.Invoke("PushStatus", Status);
                             var advert = GetAdvert(advertElement, driver);
-                            adverts.Add(advert);
+                            parsedAdverts.Add(advert);
                         }
                     }
 
-                    var filter = new ParserFilter(advertRepository);
-                    var newAdverts = filter.GetNewAdverts(adverts);
-                    var changedAdverts = filter.GetChangedAdverts(adverts);
+                    var filter = new ParserFilter(dbAdverts);
+                    var newAdverts = filter.GetNewAdverts(parsedAdverts);
+                    var changedAdverts = filter.GetChangedAdverts(parsedAdverts);
+                    var outdatedAdverts = filter.GetOutdatedAdverts(parsedAdverts);
 
                     Status = "Updatind database...";
                     hubProxy.Invoke("PushStatus", Status);
                     advertRepository.AddRange(newAdverts);
                     advertRepository.AddRange(changedAdverts);
+                    advertRepository.EditRange(outdatedAdverts);
 
                     Status = "Done!";
                     hubProxy.Invoke("PushStatus", Status);
@@ -141,9 +145,9 @@
 
         private int? GetBuildingId(string elementAddr)
         {
-            if (buildingList.Any(addr => elementAddr.Contains(addr.ShortStreet) && elementAddr.Contains(addr.No)))
+            if (this.buildings.Any(addr => elementAddr.Contains(addr.ShortStreet) && elementAddr.Contains(addr.No)))
             {
-                return buildingList.First(addr => elementAddr.Contains(addr.ShortStreet) && elementAddr.Contains(addr.No)).Id;
+                return this.buildings.First(addr => elementAddr.Contains(addr.ShortStreet) && elementAddr.Contains(addr.No)).Id;
             }
             return null;
         }

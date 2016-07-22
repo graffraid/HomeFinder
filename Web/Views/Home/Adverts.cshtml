@@ -12,13 +12,13 @@
                 <div class="thumbnail">
                     @*<img src= "" alt="...">*@
                     <div class="caption">
-                        <h3>@advert.Price</h3>
-                        <p>Адрес: @advert.Building.Street, @advert.Building.No</p>
-                        <p>Комнат: @advert.RoomCount</p>
-                        <p>Этаж: @advert.Floor/@advert.TotalFloor</p>
-                        <p>Площадь: @advert.Space</p>
+                        <h3 class="@advert.Type">@advert.Price</h3>
+                        <p class="@advert.Type">Адрес: @advert.Building.Street, @advert.Building.No</p>
+                        <p class="@advert.Type">Комнат: @advert.RoomCount</p>
+                        <p class="@advert.Type">Этаж: @advert.Floor/@advert.TotalFloor</p>
+                        <p class="@advert.Type">Площадь: @advert.Space</p>
                         <p>
-                            <a href="#" class="btn btn-primary" role="button">Button</a> <a href="#" class="btn btn-default" role="button">Button</a>
+                            <a href="#" class="btn btn-primary @advert.Type" role="button">Button</a> <a href="#" class="btn btn-default @advert.Type" role="button">Button</a>
                         </p>
                     </div>
                 </div>

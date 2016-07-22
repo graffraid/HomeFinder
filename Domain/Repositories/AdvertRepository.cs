@@ -2,6 +2,7 @@
 {
     using System;
     using System.Collections.Generic;
+    using System.Data.Entity;
     using System.Linq;
     using Entities;
 
@@ -18,7 +19,10 @@
         {
             return context.Adverts.Include("AdvertImages")
                                   .Include("Building")
+                                  .Include("InitialAdvert")
+                                  .Include("ChangedAdvert")
                                   .OrderByDescending(x => x.AddDate)
+                                  .Where(x => x.ChangedAdvert == null)
                                   .ToList();
         }
 
@@ -40,6 +44,15 @@
                 context.Adverts.AddRange(adverts);
                 context.SaveChanges();
             }
+        }
+
+        public virtual void EditRange(IList<Advert> adverts)
+        {
+            foreach (var advert in adverts)
+            {
+                context.Entry(advert).State = EntityState.Modified;
+            }
+            context.SaveChanges();
         }
     }
 }

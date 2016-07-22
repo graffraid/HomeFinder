@@ -55,9 +55,9 @@
     <Compile Include="Entities\AdvertImage.cs" />
     <Compile Include="Entities\Building.cs" />
     <Compile Include="FinderDbContext.cs" />
-    <Compile Include="Migrations\201607221044379_InitialiseMigration.cs" />
-    <Compile Include="Migrations\201607221044379_InitialiseMigration.Designer.cs">
-      <DependentUpon>201607221044379_InitialiseMigration.cs</DependentUpon>
+    <Compile Include="Migrations\201607221323060_InitialiseMigration.cs" />
+    <Compile Include="Migrations\201607221323060_InitialiseMigration.Designer.cs">
+      <DependentUpon>201607221323060_InitialiseMigration.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -75,8 +75,8 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201607221044379_InitialiseMigration.resx">
-      <DependentUpon>201607221044379_InitialiseMigration.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201607221323060_InitialiseMigration.resx">
+      <DependentUpon>201607221323060_InitialiseMigration.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

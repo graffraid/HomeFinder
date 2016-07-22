@@ -1,5 +1,6 @@
 namespace Domain.Migrations
 {
+    using System;
     using System.Data.Entity.Migrations;
     
     public partial class InitialiseMigration : DbMigration
@@ -37,6 +38,7 @@ namespace Domain.Migrations
                         SellerPhone = c.String(),
                         IsSellerAgency = c.Boolean(nullable: false),
                         AddDate = c.DateTime(nullable: false),
+                        Type = c.Int(nullable: false),
                         BuildingId = c.Int(nullable: false),
                         InitialAdvert_Id = c.Int(),
                     })
