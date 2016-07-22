@@ -49,11 +49,12 @@
         }
 
         [Route("data/adverts")]
-        [HttpPatch]
+        [HttpGet]
         public IHttpActionResult UpdateAdveets()
         {
-            var parser = new Parser();
-            Task.Run(() => parser.Parse());
+            var urlToParse ="https://www.avito.ru/voronezh/kvartiry/prodam/vtorichka/kirpichnyy_dom?district=150&f=549_5698-5699-5700"; //ToDo: pass it as parameter.
+            var avitoParser = new Parser(urlToParse);
+            Task.Run(() => avitoParser.Parse($"{Request.RequestUri.Scheme}://{Request.RequestUri.Host}"));
             return Ok();
         }
     }

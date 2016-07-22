@@ -5,22 +5,33 @@
     using System.Linq;
     using Domain.Entities;
     using Domain.Repositories;
+    using Microsoft.AspNet.SignalR.Client;
     using OpenQA.Selenium;
     using OpenQA.Selenium.Firefox;
     using OpenQA.Selenium.PhantomJS;
 
     public class Parser
     {
-        public static string Status { get; private set; } = string.Empty;
-
+        public string Status { get; private set; } = "Ready to start";
         private List<Building> buildingList;
-        private string url = "https://www.avito.ru/voronezh/kvartiry/prodam/vtorichka/kirpichnyy_dom?district=150&f=549_5698-5699-5700";
-        
-        public void Parse()
+        private readonly string url;
+
+        public Parser(string url)
         {
-            if (Status == string.Empty || Status == "Done!")
+            this.url = url;
+        }
+
+        public void Parse(string hubUrl)
+        {
+            var hubConnection = new HubConnection(hubUrl);
+            var hubProxy = hubConnection.CreateHubProxy("foxyHub");
+            hubConnection.Start().Wait();
+
+            if (Status == "Ready to start" || Status == "Done!")
             {
                 Status = "Start parsing...";
+                hubProxy.Invoke("PushStatus", Status);
+
                 var buildingRepository = new BuildingRepository();
                 var advertRepository = new AdvertRepository();
 
@@ -31,26 +42,30 @@
                 //using (IWebDriver driver = new FirefoxDriver())
                 {
                     driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
-                    List<AdvertElement> advertElements = GetAdvertElements(driver);
+                    List<AdvertElement> advertElements = GetAdvertElements(driver, hubProxy);
                     Status = $"Getting adverts finished. Count:{advertElements.Count}";
+                    hubProxy.Invoke("PushStatus", Status);
 
                     var index = 0;
                     foreach (var advertElement in advertElements)
                     {
                         index++;
                         Status = $"Parsing adverts... {index}/{advertElements.Count}";
+                        hubProxy.Invoke("PushStatus", Status);
                         var advert = GetAdvert(advertElement, driver);
                         adverts.Add(advert);
                     }
                 }
                 Status = "Updatind database...";
+                hubProxy.Invoke("PushStatus", Status);
                 //advertRepository.AddOrUpdateRange(adverts);
                 advertRepository.AddRange(adverts);
                 Status = "Done!";
+                hubProxy.Invoke("PushStatus", Status);
             }
         }
 
-        private List<AdvertElement> GetAdvertElements(IWebDriver driver)
+        private List<AdvertElement> GetAdvertElements(IWebDriver driver, IHubProxy hubProxy)
         {
             List<AdvertElement> result = new List<AdvertElement>();
             driver.Navigate().GoToUrl(url);
@@ -61,6 +76,7 @@
             foreach (var pageUrl in pageUrlList)
             {
                 Status = $"Getting adverts... page {pageUrl.Key}/{pageUrlList.Count}";
+                hubProxy.Invoke("PushStatus", Status);
 
                 IList<IWebElement> advertWebElements = GetAdvertWebElements(driver, pageUrl.Value);
                 List<AdvertElement> advertElements = GetCorrectAdvertElements(advertWebElements);
