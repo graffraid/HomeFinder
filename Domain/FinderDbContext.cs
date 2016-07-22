@@ -34,8 +34,7 @@ namespace Domain
 
             modelBuilder.Entity<Advert>()
                 .HasOptional(adv => adv.ChangedAdvert)
-                .WithRequired(adv => adv.InitialAdvert)
-                .WillCascadeOnDelete(false);
+                .WithOptionalPrincipal(adv => adv.InitialAdvert);
         }
     }
 }

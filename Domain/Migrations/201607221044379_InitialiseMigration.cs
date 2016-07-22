@@ -1,6 +1,5 @@
 namespace Domain.Migrations
 {
-    using System;
     using System.Data.Entity.Migrations;
     
     public partial class InitialiseMigration : DbMigration
@@ -39,7 +38,7 @@ namespace Domain.Migrations
                         IsSellerAgency = c.Boolean(nullable: false),
                         AddDate = c.DateTime(nullable: false),
                         BuildingId = c.Int(nullable: false),
-                        InitialAdvert_Id = c.Int(nullable: false),
+                        InitialAdvert_Id = c.Int(),
                     })
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Buildings", t => t.BuildingId)
