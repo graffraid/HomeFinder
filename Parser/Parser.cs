@@ -29,45 +29,53 @@
 
             if (Status == "Ready to start" || Status == "Done!")
             {
-                Status = "Start parsing...";
-                hubProxy.Invoke("PushStatus", Status);
-
-                var buildingRepository = new BuildingRepository();
-                var advertRepository = new AdvertRepository();
-
-                buildingList = buildingRepository.GetAll();
-                List<Advert> adverts = new List<Advert>();
-
-                using (IWebDriver driver = new PhantomJSDriver())
-                //using (IWebDriver driver = new FirefoxDriver())
+                try
                 {
-                    driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
-                    List<AdvertElement> advertElements = GetAdvertElements(driver, hubProxy);
-                    Status = $"Getting adverts finished. Count:{advertElements.Count}";
+                    Status = "Start parsing...";
                     hubProxy.Invoke("PushStatus", Status);
 
-                    var index = 0;
-                    foreach (var advertElement in advertElements)
+                    var buildingRepository = new BuildingRepository();
+                    var advertRepository = new AdvertRepository();
+
+                    buildingList = buildingRepository.GetAll();
+                    List<Advert> adverts = new List<Advert>();
+
+                    using (IWebDriver driver = new PhantomJSDriver())
+                    //using (IWebDriver driver = new FirefoxDriver())
                     {
-                        index++;
-                        Status = $"Parsing adverts... {index}/{advertElements.Count}";
+                        driver.Manage().Timeouts().ImplicitlyWait(TimeSpan.FromSeconds(10));
+                        List<AdvertElement> advertElements = GetAdvertElements(driver, hubProxy);
+                        Status = $"Getting adverts finished. Count:{advertElements.Count}";
                         hubProxy.Invoke("PushStatus", Status);
-                        var advert = GetAdvert(advertElement, driver);
-                        adverts.Add(advert);
+
+                        var index = 0;
+                        foreach (var advertElement in advertElements)
+                        {
+                            index++;
+                            Status = $"Parsing adverts... {index}/{advertElements.Count}";
+                            hubProxy.Invoke("PushStatus", Status);
+                            var advert = GetAdvert(advertElement, driver);
+                            adverts.Add(advert);
+                        }
                     }
+
+                    var filter = new ParserFilter(advertRepository);
+                    var newAdverts = filter.GetNewAdverts(adverts);
+                    var changedAdverts = filter.GetChangedAdverts(adverts);
+
+                    Status = "Updatind database...";
+                    hubProxy.Invoke("PushStatus", Status);
+                    advertRepository.AddRange(newAdverts);
+                    advertRepository.AddRange(changedAdverts);
+
+                    Status = "Done!";
+                    hubProxy.Invoke("PushStatus", Status);
                 }
-
-                var filter = new ParserFilter(advertRepository);
-                var newAdverts = filter.GetNewAdverts(adverts);
-                var changedAdverts = filter.GetChangedAdverts(adverts);
-                
-                Status = "Updatind database...";
-                hubProxy.Invoke("PushStatus", Status);
-                advertRepository.AddRange(newAdverts);
-                advertRepository.AddRange(changedAdverts);
-
-                Status = "Done!";
-                hubProxy.Invoke("PushStatus", Status);
+                catch (Exception ex)
+                {
+                    Status = "Error! " + ex.GetType();
+                    hubProxy.Invoke("PushStatus", Status);
+                }
             }
         }
 

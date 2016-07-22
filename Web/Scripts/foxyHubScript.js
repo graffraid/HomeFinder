@@ -1,6 +1,9 @@
 ﻿$(function () {
     $('#updateBtn').on('click', function () {
 
+        $(this).removeClass('btn-success');
+        $(this).removeClass('btn-danger');
+        $(this).addClass('btn-primary');
         $(this).attr("disabled", "disabled");
 
         $.connection.hub.start().done(function () {
@@ -15,6 +18,12 @@
         if (status == 'Done!') {
             $('#updateBtn').removeClass('btn-primary');
             $('#updateBtn').addClass('btn-success');
+            $('#updateBtn').attr("disabled", false);
+        }
+
+        if (status.indexOf('Error!') > -1) {
+            $('#updateBtn').removeClass('btn-primary');
+            $('#updateBtn').addClass('btn-danger');
             $('#updateBtn').attr("disabled", false);
         }
     }
