@@ -83,6 +83,7 @@
                 {
                     Status = "Error! " + ex.GetType();
                     hubProxy.Invoke("PushStatus", Status);
+                    throw;
                 }
             }
         }
@@ -174,7 +175,7 @@
                            Space = double.Parse(data[1].Replace('.', ',')),
                            Floor = int.Parse(data[2]),
                            TotalFloor = int.Parse(data[3]),
-                           Description = driver.FindElement(By.Id("desc_text")).FindElement(By.TagName("p")).Text,
+                           Description = ParseDescription(driver),
                            SellerName = driver.FindElement(By.Id("seller")).FindElement(By.TagName("strong")).Text,
                            SellerPhone = driver.FindElement(By.ClassName("description__phone-img")).GetAttribute("src"),
                            IsSellerAgency = driver.FindElement(By.ClassName("description_seller")).Text.Trim() == "Агентство"
@@ -223,6 +224,32 @@
             var minutes = int.Parse(date[1].Split(':')[1]);
 
             return result.AddHours(hours).AddMinutes(minutes);
+        }
+
+        private string ParseDescription(IWebDriver driver)
+        {
+            if (IsElementPresent(By.Id("desc_text"), driver))
+            {
+                return driver.FindElement(By.Id("desc_text")).FindElement(By.TagName("p")).Text;
+            }
+            if (IsElementPresent(By.XPath(".//*[@id='item']/div[4]/div[1]/div[2]/div[2]/div[3]/div[2]/div[2]/div"), driver))
+            {
+                return driver.FindElement(By.XPath(".//*[@id='item']/div[4]/div[1]/div[2]/div[2]/div[3]/div[2]/div[2]/div")).Text;
+            }
+            return string.Empty;
+        }
+
+        private bool IsElementPresent(By by, IWebDriver driver)
+        {
+            try
+            {
+                driver.FindElement(by);
+                return true;
+            }
+            catch (NoSuchElementException)
+            {
+                return false;
+            }
         }
     }
 }
