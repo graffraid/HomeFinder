@@ -1,9 +1,10 @@
 namespace Domain.Migrations
 {
+    using System;
     using System.Collections.Generic;
     using System.Data.Entity.Migrations;
     using System.Linq;
-
+    using System.Text.RegularExpressions;
     using Entities;
 
     internal sealed class Configuration : DbMigrationsConfiguration<FinderDbContext>
@@ -35,6 +36,49 @@ namespace Domain.Migrations
                                                    new Building { Street = "Московский Проспект", ShortStreet = "Московский", No = "117Б" },
                                                    new Building { Street = "Московский Проспект", ShortStreet = "Московский", No = "117В" }
                                                });
+                context.SaveChanges();
+            }
+
+            if (!context.AlternativeBuildingNumbers.Any())
+            {
+                var allBuildings = context.Buildings.ToList();
+                var buildings = allBuildings.Where(x => !Regex.IsMatch(x.No, "^[0-9]*$")).ToList();
+                foreach (var building in buildings)
+                {
+                    var let = new Regex(@"[\d-]").Replace(building.No, "");
+                    var dig = building.No.Replace(let, "");
+                    building.AlternativeBuildingNumbers = new List<AlternativeBuildingNumber>
+                                                              {
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0}{1}", dig, let.ToLower())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0}{1}", dig, let.ToUpper())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0} {1}", dig, let.ToLower())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0} {1}", dig, let.ToUpper())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0}-{1}", dig, let.ToLower())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0}-{1}", dig, let.ToUpper())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0} -{1}", dig, let.ToLower())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0} -{1}", dig, let.ToUpper())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0}- {1}", dig, let.ToLower())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0}- {1}", dig, let.ToUpper())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0} - {1}", dig, let.ToLower())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0} - {1}", dig, let.ToUpper())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0}/{1}", dig, let.ToLower())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0}/{1}", dig, let.ToUpper())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0} /{1}", dig, let.ToLower())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0} /{1}", dig, let.ToUpper())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0}/ {1}", dig, let.ToLower())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0}/ {1}", dig, let.ToUpper())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0} / {1}", dig, let.ToLower())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0} / {1}", dig, let.ToUpper())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0}\\{1}", dig, let.ToLower())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0}\\{1}", dig, let.ToUpper())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0} \\{1}", dig, let.ToLower())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0} \\{1}", dig, let.ToUpper())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0}\\ {1}", dig, let.ToLower())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0}\\ {1}", dig, let.ToUpper())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0} \\ {1}", dig, let.ToLower())},
+                                                                 new AlternativeBuildingNumber{No = string.Format("{0} \\ {1}", dig, let.ToUpper())}
+                                                              };
+                }
                 context.SaveChanges();
             }
         }

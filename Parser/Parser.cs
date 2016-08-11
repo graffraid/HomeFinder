@@ -150,11 +150,18 @@
 
         private int? GetBuildingId(string elementAddr)
         {
-            if (this.buildings.Any(addr => elementAddr.Contains(addr.ShortStreet) && elementAddr.Contains(addr.No)))
+            var ids = this.buildings.Where(building => elementAddr.Contains(building.ShortStreet) && building.AlternativeBuildingNumbers.Any(no => elementAddr.Contains(no.No))).Select(building => building.Id).ToList();
+
+            if (ids.Count == 0)
             {
-                return this.buildings.First(addr => elementAddr.Contains(addr.ShortStreet) && elementAddr.Contains(addr.No)).Id;
+                return null;
             }
-            return null;
+            if (ids.Count == 1)
+            {
+                return ids.First();
+            }
+
+            return buildings.Where(x => ids.Contains(x.Id)).OrderByDescending(x => x.No).First().Id;
         }
 
         private Advert GetAdvert(AdvertElement advertElement, IWebDriver driver)

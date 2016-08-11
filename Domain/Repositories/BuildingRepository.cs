@@ -17,7 +17,7 @@
 
         public List<Building> GetAll()
         {
-            return context.Buildings.ToList();
+            return context.Buildings.Include("AlternativeBuildingNumbers").ToList();
         }
 
         public void AddNew(Building building)

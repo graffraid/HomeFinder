@@ -53,11 +53,16 @@
   <ItemGroup>
     <Compile Include="Entities\Advert.cs" />
     <Compile Include="Entities\AdvertImage.cs" />
+    <Compile Include="Entities\AlternativeBuildingNumber.cs" />
     <Compile Include="Entities\Building.cs" />
     <Compile Include="FinderDbContext.cs" />
     <Compile Include="Migrations\201607221323060_InitialiseMigration.cs" />
     <Compile Include="Migrations\201607221323060_InitialiseMigration.Designer.cs">
       <DependentUpon>201607221323060_InitialiseMigration.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201608101435382_AddAlternativeBuildingNumbers.cs" />
+    <Compile Include="Migrations\201608101435382_AddAlternativeBuildingNumbers.Designer.cs">
+      <DependentUpon>201608101435382_AddAlternativeBuildingNumbers.cs</DependentUpon>
     </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -78,6 +83,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201607221323060_InitialiseMigration.resx">
       <DependentUpon>201607221323060_InitialiseMigration.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608101435382_AddAlternativeBuildingNumbers.resx">
+      <DependentUpon>201608101435382_AddAlternativeBuildingNumbers.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

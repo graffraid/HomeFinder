@@ -18,6 +18,8 @@ namespace Domain
 
         public DbSet<Building> Buildings { get; set; }
 
+        public DbSet<AlternativeBuildingNumber> AlternativeBuildingNumbers { get; set; }
+
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<AdvertImage>()
@@ -35,6 +37,12 @@ namespace Domain
             modelBuilder.Entity<Advert>()
                 .HasOptional(adv => adv.ChangedAdvert)
                 .WithOptionalPrincipal(adv => adv.InitialAdvert);
+
+            modelBuilder.Entity<AlternativeBuildingNumber>()
+                .HasRequired(alt => alt.Building)
+                .WithMany(bld => bld.AlternativeBuildingNumbers)
+                .HasForeignKey(alt => alt.BuildingId)
+                .WillCascadeOnDelete(false);
         }
     }
 }

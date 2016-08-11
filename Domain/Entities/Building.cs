@@ -12,6 +12,8 @@
 
         public string No { get; set; }
 
+        public virtual List<AlternativeBuildingNumber> AlternativeBuildingNumbers { get; set; }
+        
         public virtual List<Advert> Adverts { get; set; }
     }
 }
