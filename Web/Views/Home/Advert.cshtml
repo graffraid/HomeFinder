@@ -3,7 +3,7 @@
 
 <h2>Advert</h2>
 
-<table>
+<table class="table">
     <tr>
         <td>
             @Model.Building.Street, @Model.Building.No
@@ -39,10 +39,6 @@
     </tr>
     <tr>
         <td>
-        </td>
-    </tr>
-    <tr>
-        <td>
             @Model.SellerName
         </td>
     </tr>
@@ -58,9 +54,27 @@
     </tr>
     <tr>
         <td>
-            <a href="@Model.Url">Avito</a>
+            <a href="@Model.Url">На Avito</a>
         </td>
     </tr>
+    @{
+        if (@Model.ChangedAdvert != null)
+        {
+            <tr>
+                <td>
+                    <a href="@Url.Action("Advert", "Home", new {id = @Model.ChangedAdvert.Id})">Устаревшее объявление</a>
+                </td>
+            </tr>
+        }
+        if (@Model.InitialAdvert != null)
+        {
+            <tr>
+                <td>
+                    <a href="@Url.Action("Advert", "Home", new {id = @Model.InitialAdvert.Id})">Обновленное объявление</a>
+                </td>
+            </tr>
+        }
+    }
 </table>
 
 <table>
@@ -71,7 +85,6 @@
             {
                 <tr>
                     <td>
-                        <hr/>
                         <img src="@img.CachedUrl"/>
                     </td>
                 </tr>
