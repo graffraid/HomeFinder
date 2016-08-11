@@ -1,0 +1,82 @@
+﻿@using Domain.Entities
+@model Advert
+
+<h2>Advert</h2>
+
+<table>
+    <tr>
+        <td>
+            @Model.Building.Street, @Model.Building.No
+        </td>
+    </tr>
+    <tr>
+        <td class="price">
+            @Model.Price
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @{
+                string rooms = (@Model.RoomCount == 1 ? "Комната" : (@Model.RoomCount < 5 ? "Комнаты" : "Комнат"));
+            }
+            @Model.RoomCount @rooms
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Model.Space м<sup>2</sup>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Model.Floor этаж из @Model.TotalFloor
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Model.Description
+        </td>
+    </tr>
+    <tr>
+        <td>
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Model.SellerName
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <img src="@Model.SellerPhone">
+        </td>
+    </tr>
+    <tr>
+        <td>
+            @Model.PlacementDate
+        </td>
+    </tr>
+    <tr>
+        <td>
+            <a href="@Model.Url">Avito</a>
+        </td>
+    </tr>
+</table>
+
+<table>
+    @{
+        if (Model.AdvertImages.Count > 0)
+        {
+            foreach (var img in Model.AdvertImages)
+            {
+                <tr>
+                    <td>
+                        <hr/>
+                        <img src="@img.CachedUrl"/>
+                    </td>
+                </tr>
+            }
+        }
+    }
+</table>
+

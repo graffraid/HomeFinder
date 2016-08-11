@@ -27,6 +27,13 @@ namespace Web.Controllers
             return View(adverts);
         }
 
+        public ActionResult Advert(int id)
+        {
+            var advert = advertRepository.Get(id);
+
+            return View(advert);
+        }
+
         public ActionResult Buildings()
         {
             var buildings = buildingRepository.GetAll();
