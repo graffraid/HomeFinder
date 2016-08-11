@@ -31,7 +31,8 @@
                                   .Include("Building")
                                   .Include("InitialAdvert")
                                   .Include("ChangedAdvert")
-                                  .OrderByDescending(x => x.AddDate)
+                                  .OrderBy(x => x.Type)
+                                  .ThenByDescending(x => x.AddDate)
                                   .Where(x => x.ChangedAdvert == null)
                                   .ToList();
         }

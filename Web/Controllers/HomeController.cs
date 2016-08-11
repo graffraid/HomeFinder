@@ -7,10 +7,12 @@ namespace Web.Controllers
     public class HomeController : Controller
     {
         private readonly AdvertRepository advertRepository;
+        private readonly BuildingRepository buildingRepository;
 
         public HomeController()
         {
             advertRepository = new AdvertRepository();
+            buildingRepository = new BuildingRepository();
         }
 
         public ActionResult Index()
@@ -27,15 +29,13 @@ namespace Web.Controllers
 
         public ActionResult Buildings()
         {
-            ViewBag.Message = "Your application Buildings page.";
+            var buildings = buildingRepository.GetAll();
 
-            return View();
+            return View(buildings);
         }
 
         public ActionResult Data()
         {
-            ViewBag.Message = "Your Data page.";
-
             return View();
         }
     }
