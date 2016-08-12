@@ -40,6 +40,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AlternativeBuildingNumbersGenerator.cs" />
     <Compile Include="Enums\AdvertType.cs" />
     <Compile Include="Excrptions\CustomHttpException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

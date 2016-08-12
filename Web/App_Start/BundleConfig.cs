@@ -19,7 +19,9 @@ namespace Web
 
             bundles.Add(new ScriptBundle("~/bundles/custom").Include(
                         "~/Scripts/foxyHubScript.js",
-                        "~/Scripts/foxyMapScript.js"));
+                        "~/Scripts/foxyMapScript.js",
+                        "~/Scripts/foxyNewBuildingScript.js",
+                        "~/Scripts/foxyValidateScript.js"));
 
             // Use the development version of Modernizr to develop with and learn from. Then, when you're
             // ready for production, use the build tool at http://modernizr.com to pick only the tests you need.

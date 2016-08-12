@@ -8,8 +8,8 @@
     using System.Web.Http;
     using Domain.Entities;
     using Domain.Repositories;
+    using Infrastructure;
     using Infrastructure.Excrptions;
-
     using Parser;
 
     [RoutePrefix("api/home")]
@@ -29,7 +29,7 @@
             return buildingRepository.GetAll();
         }
 
-        [Route("buildings")]
+        [Route("building")]
         [HttpPost]
         public IHttpActionResult AddNewBuilding(Building building)
         {
@@ -37,6 +37,21 @@
             {
                 throw new CustomHttpException(HttpStatusCode.BadRequest, "Incorrect data");
             }
+
+            building.AlternativeBuildingNumbers = new List<AlternativeBuildingNumber>();
+            var alternativeBuildingNumbers = (new AlternativeBuildingNumbersGenerator()).Generate(building.No);
+            
+            if (alternativeBuildingNumbers.Count > 0)
+            {
+                foreach (var alternativeBuildingNumber in alternativeBuildingNumbers)
+                {
+                    building.AlternativeBuildingNumbers.Add(new AlternativeBuildingNumber
+                                                                {
+                                                                    No = alternativeBuildingNumber
+                                                                });
+                }
+            }
+
 
             buildingRepository.AddNew(building);
             return Ok();

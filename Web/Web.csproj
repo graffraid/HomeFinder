@@ -186,6 +186,8 @@
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\foxyHubScript.js" />
     <Content Include="Scripts\foxyMapScript.js" />
+    <Content Include="Scripts\foxyNewBuildingScript.js" />
+    <Content Include="Scripts\foxyValidateScript.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
