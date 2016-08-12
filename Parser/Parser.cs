@@ -150,7 +150,7 @@
 
         private int? GetBuildingId(string elementAddr)
         {
-            var ids = this.buildings.Where(building => elementAddr.Contains(building.ShortStreet) && building.AlternativeBuildingNumbers.Any(no => elementAddr.Contains(no.No))).Select(building => building.Id).ToList();
+            var ids = this.buildings.Where(building => elementAddr.ToLower().Contains(building.ShortStreet.ToLower()) && building.AlternativeBuildingNumbers.Any(no => elementAddr.Contains(no.No))).Select(building => building.Id).ToList();
 
             if (ids.Count == 0)
             {
