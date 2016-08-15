@@ -64,6 +64,10 @@
     <Compile Include="Migrations\201608101435382_AddAlternativeBuildingNumbers.Designer.cs">
       <DependentUpon>201608101435382_AddAlternativeBuildingNumbers.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201608151333334_AddCoordinateForBuilding.cs" />
+    <Compile Include="Migrations\201608151333334_AddCoordinateForBuilding.Designer.cs">
+      <DependentUpon>201608151333334_AddCoordinateForBuilding.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Repositories\AdvertRepository.cs" />
@@ -86,6 +90,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201608101435382_AddAlternativeBuildingNumbers.resx">
       <DependentUpon>201608101435382_AddAlternativeBuildingNumbers.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201608151333334_AddCoordinateForBuilding.resx">
+      <DependentUpon>201608151333334_AddCoordinateForBuilding.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
