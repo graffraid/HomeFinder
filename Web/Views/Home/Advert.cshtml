@@ -3,7 +3,7 @@
 
 <h2>Advert</h2>
 
-<table class="table @Model.Type">
+<table class="table @Model.Type" id="advert" data-lat ="@Model.Building.Latitude.ToString().Replace(",", ".")" data-lon ="@Model.Building.Longitude.ToString().Replace(",", ".")">
     <tr>
         <td>
             @Model.Building.Street, @Model.Building.No

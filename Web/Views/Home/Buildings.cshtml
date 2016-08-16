@@ -14,7 +14,7 @@
             <tbody>
             @for (int i = 0; i < Model.Count; i++)
             {
-                <tr data-lat ="@Model[i].Latitude" data-lon ="@Model[i].Longitude">
+                <tr class="building" data-lat ="@Model[i].Latitude.ToString().Replace(",", ".")" data-lon ="@Model[i].Longitude.ToString().Replace(",", ".")">
                     <td>@i</td>
                     <td>@Model[i].Street</td>
                     <td>@Model[i].No</td>
