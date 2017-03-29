@@ -3,9 +3,7 @@
     $.connection.hub.start().done();
 
     $("#updateBtn").on("click", function () {
-
         $.get("http://foxy.local/api/home/data/adverts");
-
         $(this).removeClass("btn-success");
         $(this).removeClass("btn-danger");
         $(this).addClass("btn-primary");
