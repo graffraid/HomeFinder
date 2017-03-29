@@ -1,6 +1,6 @@
 ﻿$(function () {
 
-    $.connection.hub.start().done(function () {});
+    $.connection.hub.start().done();
 
     $("#updateBtn").on("click", function () {
 
